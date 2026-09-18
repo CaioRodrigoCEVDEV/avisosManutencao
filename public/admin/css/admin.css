@@ -1,0 +1,120 @@
+:root {
+  --brand: #0d3b66;
+  --brand-accent: #1d6fb8;
+  --surface: #f5f7fa;
+}
+
+body {
+  background-color: var(--surface);
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #0d3b66 0%, #1d6fb8 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25);
+}
+
+.app-navbar {
+  background-color: var(--brand);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--brand-accent);
+  color: #fff;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(15, 43, 74, 0.06);
+}
+
+.stat-card .stat-label {
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.stat-card .stat-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.stat-card .stat-icon {
+  font-size: 1.5rem;
+  opacity: 0.35;
+}
+
+.preview-box {
+  background: #fff;
+  border: 1px dashed #c6d3e3;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-height: 120px;
+}
+
+.preview-message {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 0;
+}
+
+.table-actions .btn {
+  --bs-btn-padding-y: 0.2rem;
+  --bs-btn-padding-x: 0.5rem;
+  --bs-btn-font-size: 0.8rem;
+}
+
+.empty-state {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.btn-brand {
+  --bs-btn-bg: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: #0a2d4f;
+  --bs-btn-hover-border-color: #0a2d4f;
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+}
+
+code.contract {
+  background: #0d1b2a;
+  color: #9be3b4;
+  display: block;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  white-space: pre;
+  overflow-x: auto;
+}

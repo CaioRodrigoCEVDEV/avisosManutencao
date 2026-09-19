@@ -231,6 +231,7 @@ Manutenção ativa:
 
 ```json
 {
+  "id": "b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6a7b",
   "ativo": true,
   "inicio": "2026-09-20T22:00:00-03:00",
   "fim": "2026-09-20T23:30:00-03:00",
@@ -243,6 +244,7 @@ Nenhuma manutenção:
 
 ```json
 {
+  "id": null,
   "ativo": false,
   "inicio": null,
   "fim": null,
@@ -258,6 +260,7 @@ Retorna a próxima manutenção habilitada que ainda não começou
 
 ```json
 {
+  "id": "b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6a7b",
   "ativo": false,
   "inicio": "2026-09-20T22:00:00-03:00",
   "fim": "2026-09-20T23:30:00-03:00",
@@ -284,6 +287,7 @@ manutenção estiver acontecendo neste instante.
 
 ```json
 {
+  "id": "b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6a7b",
   "ativo": false,
   "inicio": "2026-09-19T23:59:00-03:00",
   "fim": "2026-09-20T02:00:00-03:00",
@@ -298,7 +302,7 @@ Se o ID não existir, retorna `404`:
 { "error": "NOT_FOUND", "message": "Manutenção não encontrada." }
 ```
 
-A resposta da API pública **nunca** inclui `id`, `createdAt` ou `updatedAt`.
+A resposta da API pública **nunca** inclui `createdAt` ou `updatedAt`.
 
 ### Consumo em JavaScript
 
@@ -326,7 +330,7 @@ requisições administrativas:
 | `title`, `titulo`                             | `title`        |
 | `active`, `ativo`, `enabled`                  | `active`       |
 
-As **respostas** sempre usam `ativo`, `inicio`, `fim`, `titulo`, `mensagem`.
+As **respostas** sempre usam `id`, `ativo`, `inicio`, `fim`, `titulo`, `mensagem`.
 
 ---
 

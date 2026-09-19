@@ -62,6 +62,7 @@ paths:
               examples:
                 ativa:
                   value:
+                    id: "b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6a7b"
                     ativo: true
                     inicio: "2026-09-20T22:00:00-03:00"
                     fim: "2026-09-20T23:30:00-03:00"
@@ -69,6 +70,7 @@ paths:
                     mensagem: O sistema ficará indisponível durante este período.
                 vazia:
                   value:
+                    id: null
                     ativo: false
                     inicio: null
                     fim: null
@@ -90,6 +92,7 @@ paths:
               examples:
                 proxima:
                   value:
+                    id: "b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6a7b"
                     ativo: false
                     inicio: "2026-09-20T22:00:00-03:00"
                     fim: "2026-09-20T23:30:00-03:00"
@@ -97,6 +100,7 @@ paths:
                     mensagem: O sistema ficará indisponível durante este período.
                 vazia:
                   value:
+                    id: null
                     ativo: false
                     inicio: null
                     fim: null
@@ -476,6 +480,11 @@ components:
     PublicMaintenance:
       type: object
       properties:
+        id:
+          type: string
+          nullable: true
+          description: Identificador do aviso (nulo quando não há manutenção)
+          example: "b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6a7b"
         ativo:
           type: boolean
         inicio:
@@ -493,7 +502,7 @@ components:
         mensagem:
           type: string
           nullable: true
-      required: [ativo, inicio, fim, titulo, mensagem]
+      required: [id, ativo, inicio, fim, titulo, mensagem]
 
     SessionUser:
       type: object

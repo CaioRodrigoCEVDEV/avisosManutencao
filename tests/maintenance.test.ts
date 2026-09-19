@@ -13,6 +13,7 @@ import {
 } from "./helpers/test-context";
 
 const EMPTY_PUBLIC = {
+  id: null,
   ativo: false,
   inicio: null,
   fim: null,
@@ -100,6 +101,7 @@ describe("CRUD e API pública de manutenções", () => {
 
     const response = await request(app).get("/api/maintenance").expect(200);
     expect(response.body).toEqual({
+      id: expect.any(String),
       ativo: true,
       inicio: expect.any(String),
       fim: expect.any(String),
@@ -109,11 +111,11 @@ describe("CRUD e API pública de manutenções", () => {
     expect(Object.keys(response.body).sort()).toEqual([
       "ativo",
       "fim",
+      "id",
       "inicio",
       "mensagem",
       "titulo",
     ]);
-    expect(response.body).not.toHaveProperty("id");
     expect(response.body).not.toHaveProperty("createdAt");
     expect(response.body).not.toHaveProperty("updatedAt");
   });
@@ -153,6 +155,7 @@ describe("CRUD e API pública de manutenções", () => {
 
     const response = await request(app).get("/api/maintenance/next").expect(200);
     expect(response.body.ativo).toBe(false);
+    expect(response.body.id).toEqual(expect.any(String));
     expect(response.body.titulo).toBe("Futura");
     expect(response.body.inicio).toEqual(expect.any(String));
   });
@@ -176,9 +179,11 @@ describe("CRUD e API pública de manutenções", () => {
     expect(response.body.titulo).toBe("Futura por ID");
     expect(response.body.inicio).toEqual(expect.any(String));
     expect(response.body.ativo).toBe(false);
+    expect(response.body.id).toBe(created.body.id);
     expect(Object.keys(response.body).sort()).toEqual([
       "ativo",
       "fim",
+      "id",
       "inicio",
       "mensagem",
       "titulo",

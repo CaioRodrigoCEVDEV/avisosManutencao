@@ -11,6 +11,7 @@ import {
 export type MaintenanceStatus = "scheduled" | "ongoing" | "finished" | "inactive";
 
 export interface PublicMaintenance {
+  id: string | null;
   ativo: boolean;
   inicio: string | null;
   fim: string | null;
@@ -31,6 +32,7 @@ export interface AdminMaintenance {
 }
 
 const EMPTY_PUBLIC: PublicMaintenance = {
+  id: null,
   ativo: false,
   inicio: null,
   fim: null,
@@ -60,11 +62,12 @@ function toAdmin(record: MaintenanceMessage, now = new Date()): AdminMaintenance
 }
 
 function toPublic(
-  record: { startAt: Date; endAt: Date; title: string; message: string } | null,
+  record: { id: string; startAt: Date; endAt: Date; title: string; message: string } | null,
   options: { forceInactive?: boolean } = {}
 ): PublicMaintenance {
   if (!record) return { ...EMPTY_PUBLIC };
   return {
+    id: record.id,
     // Em /api/maintenance/next o contrato retorna ativo=false, pois a
     // próxima manutenção, por definição, ainda não começou.
     ativo: options.forceInactive ? false : true,
@@ -83,6 +86,7 @@ function toPublic(
 function toPublicById(record: MaintenanceMessage): PublicMaintenance {
   const now = new Date();
   return {
+    id: record.id,
     ativo: record.active && record.startAt <= now && record.endAt >= now,
     inicio: formatIsoWithOffset(record.startAt, env.appTimezone),
     fim: formatIsoWithOffset(record.endAt, env.appTimezone),

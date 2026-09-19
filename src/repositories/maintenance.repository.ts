@@ -76,7 +76,7 @@ export const maintenanceRepository = {
         endAt: { gte: now },
       },
       orderBy: { startAt: "desc" },
-      select: { startAt: true, endAt: true, title: true, message: true },
+      select: { id: true, startAt: true, endAt: true, title: true, message: true },
     });
   },
 
@@ -90,7 +90,7 @@ export const maintenanceRepository = {
         startAt: { gt: now },
       },
       orderBy: { startAt: "asc" },
-      select: { startAt: true, endAt: true, title: true, message: true },
+      select: { id: true, startAt: true, endAt: true, title: true, message: true },
     });
   },
 

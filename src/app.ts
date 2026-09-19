@@ -1,6 +1,5 @@
 import path from "path";
 import express, { type Application, type Request, type Response } from "express";
-import helmet from "helmet";
 import cors, { type CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
@@ -12,6 +11,7 @@ import { adminRouter } from "./routes/admin.routes";
 import { publicMaintenanceRouter } from "./routes/maintenance.routes";
 import { notFound } from "./middlewares/not-found.middleware";
 import { errorHandler } from "./middlewares/error.middleware";
+import { securityHeaders } from "./middlewares/security.middleware";
 
 const publicDir = path.resolve(process.cwd(), "public");
 const adminDir = path.join(publicDir, "admin");
@@ -43,30 +43,17 @@ function buildCorsOptions(): CorsOptions {
 export function createApp(): Application {
   const app = express();
 
-  if (env.isProduction) {
-    app.set("trust proxy", 1);
+  // Necessário atrás de Apache/Nginx para que req.secure, req.ip e o
+  // protocolo (X-Forwarded-Proto) sejam interpretados corretamente.
+  if (env.trustProxy !== false) {
+    app.set("trust proxy", env.trustProxy);
   }
 
   app.disable("x-powered-by");
 
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-          scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
-          imgSrc: ["'self'", "data:"],
-          fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
-          connectSrc: ["'self'"],
-          objectSrc: ["'none'"],
-          baseUri: ["'self'"],
-          frameAncestors: ["'none'"],
-        },
-      },
-      crossOriginEmbedderPolicy: false,
-    })
-  );
+  // Cabeçalhos de segurança adaptados ao protocolo real da requisição:
+  // em HTTP não envia upgrade-insecure-requests/HSTS; em HTTPS mantém tudo.
+  app.use(securityHeaders);
 
   app.use(cors(buildCorsOptions()));
   app.use(cookieParser());

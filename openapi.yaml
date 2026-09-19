@@ -13,7 +13,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Desenvolvimento
-  - url: https://meu-dominio.com
+  - url: https://avisos.orderup.com.br
     description: Produção
 
 tags:

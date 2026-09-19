@@ -635,6 +635,31 @@ inativa/vazia), `/next`, conflito de períodos e validação `endAt <= startAt`.
 - Middleware global de erro; stack trace nunca exposta em produção.
 - `x-powered-by` desabilitado.
 
+### CSP, HSTS e HTTPS (adaptativo ao protocolo)
+
+Os cabeçalhos de segurança são aplicados **por requisição**, de acordo com o
+protocolo real (`req.secure` ou `X-Forwarded-Proto`):
+
+| Requisição            | `upgrade-insecure-requests` | HSTS | Cookie `Secure` |
+| --------------------- | --------------------------- | ---- | --------------- |
+| HTTP (direto/local)   | não enviado                 | não  | não             |
+| HTTPS (direto/proxy)  | enviado                     | sim  | sim             |
+
+Isso evita o erro `ERR_SSL_PROTOCOL_ERROR` ao acessar o painel por HTTP
+(o navegador não tenta mais promover `/admin/css` e `/admin/js` para HTTPS) e,
+ao mesmo tempo, mantém todas as proteções quando a aplicação estiver atrás do
+Apache com HTTPS.
+
+- As proteções restantes (CSP, `X-Content-Type-Options`, `X-Frame-Options`,
+  `Referrer-Policy`, etc.) continuam ativas em ambos os casos.
+- Os assets locais usam caminhos relativos (`/admin/...`), portanto funcionam
+  em HTTP e HTTPS sem alteração.
+- Atrás de Apache/Nginx configure `X-Forwarded-Proto` e o `trust proxy`. Por
+  padrão o projeto usa `trust proxy = 1` em produção; pode ser ajustado com a
+  variável `TRUST_PROXY` (`true`, `false` ou número de hops).
+- O domínio de produção `https://avisos.orderup.com.br` deve constar em
+  `CORS_ORIGIN`.
+
 ---
 
 ## Deploy em produção

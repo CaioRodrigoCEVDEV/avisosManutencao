@@ -12,6 +12,7 @@ const envSchema = z.object({
   COOKIE_NAME: z.string().default("maintenance_auth"),
   CORS_ORIGIN: z.string().default("http://localhost:3000"),
   APP_TIMEZONE: z.string().default("America/Sao_Paulo"),
+  TRUST_PROXY: z.string().optional(),
   ADMIN_NAME: z.string().optional(),
   ADMIN_EMAIL: z.string().optional(),
   ADMIN_PASSWORD: z.string().optional(),
@@ -36,6 +37,26 @@ if (raw.NODE_ENV === "production") {
   }
 }
 
+/**
+ * Resolve a configuração de `trust proxy` (necessária atrás de Apache/Nginx).
+ * Padrão: `1` em produção, desativado nos demais ambientes.
+ * Pode ser sobrescrita pela variável TRUST_PROXY (true/false/número).
+ */
+function resolveTrustProxy(value: string | undefined, isProduction: boolean): number | boolean | string {
+  if (value === undefined || value.trim() === "") {
+    return isProduction ? 1 : false;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "true") return true;
+  if (normalized === "false") return false;
+
+  const numeric = Number(normalized);
+  if (!Number.isNaN(numeric)) return numeric;
+
+  return value;
+}
+
 export const env = {
   nodeEnv: raw.NODE_ENV,
   port: raw.PORT,
@@ -45,6 +66,7 @@ export const env = {
   cookieName: raw.COOKIE_NAME,
   corsOrigin: raw.CORS_ORIGIN,
   appTimezone: raw.APP_TIMEZONE,
+  trustProxy: resolveTrustProxy(raw.TRUST_PROXY, raw.NODE_ENV === "production"),
   adminName: raw.ADMIN_NAME,
   adminEmail: raw.ADMIN_EMAIL,
   adminPassword: raw.ADMIN_PASSWORD,

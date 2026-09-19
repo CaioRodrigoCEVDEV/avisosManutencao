@@ -122,6 +122,36 @@
     return payload.user;
   }
 
+  function publicUrl(id) {
+    return `${window.location.origin}/api/maintenance/${id}`;
+  }
+
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (error) {
+      // segue para o fallback abaixo
+    }
+
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      return copied;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async function logout() {
     try {
       await apiFetch("/api/auth/logout", { method: "POST" });
@@ -142,6 +172,8 @@
     escapeHtml,
     showAlert,
     loadSession,
+    publicUrl,
+    copyText,
     logout,
   };
 })();

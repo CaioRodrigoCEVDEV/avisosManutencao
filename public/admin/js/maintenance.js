@@ -1,7 +1,17 @@
 (function () {
   "use strict";
 
-  const { apiFetch, formatDateTime, statusBadge, escapeHtml, showAlert, loadSession, logout } = window.AdminApp;
+  const {
+    apiFetch,
+    formatDateTime,
+    statusBadge,
+    escapeHtml,
+    showAlert,
+    loadSession,
+    publicUrl,
+    copyText,
+    logout,
+  } = window.AdminApp;
   const alertBox = document.getElementById("page-alert");
   const filterSelect = document.getElementById("filter");
   const body = document.getElementById("maintenance-body");
@@ -26,6 +36,7 @@
           <td>${statusBadge(item.status)}</td>
           <td class="text-end table-actions">
             <a class="btn btn-outline-primary" href="/admin/maintenance/${item.id}/edit">Editar</a>
+            <button class="btn btn-outline-secondary" data-copy-url-id="${item.id}">URL</button>
             <button
               class="btn ${toggleClass}"
               data-toggle-id="${item.id}"
@@ -42,6 +53,17 @@
     });
     body.querySelectorAll("[data-delete-id]").forEach((button) => {
       button.addEventListener("click", () => remove(button.dataset.deleteId));
+    });
+    body.querySelectorAll("[data-copy-url-id]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const url = publicUrl(button.dataset.copyUrlId);
+        const ok = await copyText(url);
+        showAlert(
+          alertBox,
+          ok ? "success" : "warning",
+          ok ? `URL copiada: ${url}` : "Não foi possível copiar a URL."
+        );
+      });
     });
   }
 

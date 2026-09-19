@@ -1,9 +1,12 @@
 (function () {
   "use strict";
 
-  const { apiFetch, toDateInput, toTimeInput, showAlert, loadSession, logout } = window.AdminApp;
+  const { apiFetch, toDateInput, toTimeInput, showAlert, loadSession, publicUrl, copyText, logout } =
+    window.AdminApp;
   const alertBox = document.getElementById("page-alert");
   const form = document.getElementById("maintenance-form");
+  const formHeader = document.getElementById("form-header");
+  const successPanel = document.getElementById("success-panel");
   const saveButton = document.getElementById("save-button");
   const fields = {
     title: document.getElementById("title"),
@@ -19,6 +22,44 @@
   const editingId = pathMatch ? pathMatch[1] : null;
 
   document.getElementById("logout-button").addEventListener("click", logout);
+
+  async function copyFromElement(element) {
+    const text = element.value !== undefined ? element.value : element.textContent;
+    const ok = await copyText(text);
+    showAlert(alertBox, ok ? "success" : "warning", ok ? "URL copiada." : "Não foi possível copiar a URL.");
+  }
+
+  function showSuccess(record) {
+    const idUrl = publicUrl(record.id);
+    document.getElementById("public-url").value = idUrl;
+    document.getElementById("open-url").href = idUrl;
+    document.getElementById("url-current").textContent = `${window.location.origin}/api/maintenance`;
+    document.getElementById("url-next").textContent = `${window.location.origin}/api/maintenance/next`;
+    document.getElementById("success-title").textContent = editingId
+      ? "Manutenção atualizada com sucesso!"
+      : "Manutenção salva com sucesso!";
+    document.getElementById("edit-saved").dataset.id = record.id;
+
+    form.classList.add("d-none");
+    formHeader.classList.add("d-none");
+    successPanel.classList.remove("d-none");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.getElementById("copy-url").addEventListener("click", () => {
+    copyFromElement(document.getElementById("public-url"));
+  });
+
+  document.querySelectorAll("[data-copy-target]").forEach((button) => {
+    button.addEventListener("click", () => {
+      copyFromElement(document.getElementById(button.dataset.copyTarget));
+    });
+  });
+
+  document.getElementById("edit-saved").addEventListener("click", (event) => {
+    const id = event.currentTarget.dataset.id;
+    if (id) window.location.href = `/admin/maintenance/${id}/edit`;
+  });
 
   function updatePreview() {
     document.getElementById("preview-title").textContent = fields.title.value || "-";
@@ -86,18 +127,19 @@
     saveButton.textContent = "Salvando...";
 
     try {
+      let record;
       if (editingId) {
-        await apiFetch(`/api/admin/maintenance/${editingId}`, {
+        record = await apiFetch(`/api/admin/maintenance/${editingId}`, {
           method: "PUT",
           body: JSON.stringify(payload),
         });
       } else {
-        await apiFetch("/api/admin/maintenance", {
+        record = await apiFetch("/api/admin/maintenance", {
           method: "POST",
           body: JSON.stringify(payload),
         });
       }
-      window.location.href = "/admin/maintenance";
+      showSuccess(record);
     } catch (error) {
       const detailMessage =
         error.details && Array.isArray(error.details)

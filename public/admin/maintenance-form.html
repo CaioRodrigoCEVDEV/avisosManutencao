@@ -48,9 +48,43 @@
     <main class="container py-4">
       <div id="page-alert"></div>
 
-      <div class="mb-4">
+      <div class="mb-4" id="form-header">
         <h1 class="h3 mb-1" id="form-title">Nova manutenção</h1>
         <p class="text-muted mb-0">Configure a janela e a mensagem exibida aos sistemas.</p>
+      </div>
+
+      <div id="success-panel" class="card mb-4 d-none">
+        <div class="card-body p-4">
+          <h2 class="h5 text-success mb-3" id="success-title">Manutenção salva com sucesso!</h2>
+          <p class="mb-1 text-muted">
+            URL pública deste aviso (JSON, funciona independente da janela de início/fim):
+          </p>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="public-url" readonly />
+            <button class="btn btn-outline-secondary" type="button" id="copy-url">Copiar</button>
+            <a class="btn btn-outline-primary" id="open-url" target="_blank" rel="noopener">Abrir JSON</a>
+          </div>
+          <p class="mb-1 text-muted">Endpoints gerais da API pública:</p>
+          <ul class="list-unstyled small mb-3">
+            <li class="mb-1">
+              <code id="url-current"></code>
+              <button class="btn btn-sm btn-outline-secondary ms-1" type="button" data-copy-target="url-current">
+                Copiar
+              </button>
+            </li>
+            <li>
+              <code id="url-next"></code>
+              <button class="btn btn-sm btn-outline-secondary ms-1" type="button" data-copy-target="url-next">
+                Copiar
+              </button>
+            </li>
+          </ul>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="/admin/maintenance" class="btn btn-brand">Ver todas as manutenções</a>
+            <a href="/admin/maintenance/new" class="btn btn-outline-secondary">Criar outra</a>
+            <button type="button" class="btn btn-outline-secondary" id="edit-saved">Editar esta</button>
+          </div>
+        </div>
       </div>
 
       <form id="maintenance-form" novalidate>
